@@ -1,0 +1,45 @@
+﻿@page "/customers"
+@using Microsoft.AspNetCore.Components.QuickGrid
+@inject HttpClient Http
+@using CustomerUI
+@using Pinewood.Models
+@inject IConfiguration Configuration
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="customers/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="@customers.AsQueryable()">
+    <PropertyColumn Property="customer => customer.FirstName" />
+    <PropertyColumn Property="customer => customer.LastName" />
+    <PropertyColumn Property="customer => customer.Email" />
+    <PropertyColumn Property="customer => customer.Address" />
+    <PropertyColumn Property="customer => customer.City" />
+    <PropertyColumn Property="customer => customer.PostalCode" />
+    <PropertyColumn Property="customer => customer.Country" />
+
+    <TemplateColumn Context="customer">
+        <a href="@($"customers/edit?id={customer.Id}")">Edit</a> |
+        <a href="@($"customers/delete?id={customer.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private List<Customer> customers = new List<Customer>();
+    public Index()
+    {
+
+    }
+    
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetUser();
+    }
+    protected async Task GetUser() => customers = await Http.GetFromJsonAsync<List<Customer>>($"{Configuration["PinewoodWebAPI"]}api/Customer");
+
+}
