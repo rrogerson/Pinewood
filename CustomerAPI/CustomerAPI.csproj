@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CustomerModels\Pinewood.Models.csproj" />
-    <ProjectReference Include="..\Pinewoood.Services\Pinewood.Services.csproj" />
+    <ProjectReference Include="..\Pinewood.Services\Pinewood.Services.csproj" />
   </ItemGroup>
 
 </Project>
