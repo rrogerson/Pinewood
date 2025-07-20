@@ -9,8 +9,9 @@ namespace RacingDigital.Services.Interfaces
 {
     public interface IRacesService
     {
-        public IEnumerable<RaceResult> GetRaces();
-        //public void AddCustomer(Race customer);
-
+        IEnumerable<RaceResult> GetRaces();
+        IEnumerable<Notes> GetNotes(int raceId);
+        int AddNotes(Notes item);
     }
 }
+        

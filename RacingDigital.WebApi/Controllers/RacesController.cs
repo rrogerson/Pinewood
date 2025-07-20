@@ -27,7 +27,34 @@ namespace RacingDigital.WebAPI.Controllers
             return _racesService.GetRaces();
         }
 
+        [HttpGet("GetNotes/{raceId}")]
+        public IEnumerable<Notes> GetNotes(int raceId)
+        {
+            return _racesService.GetNotes(raceId);
+        }
+
+        [HttpPost("AddNote")]
+        public IActionResult AddNote([FromBody] Notes item)
+        {
+            if (item == null)
+            {
+                return BadRequest("No item provided.");
+            }
+
+            try
+            {
+                int result = _racesService.AddNotes(item);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"UpdateJob error: {ex.Message}");
+                // Handle exceptions, return an error response
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 
-   
+
 }

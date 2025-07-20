@@ -2,26 +2,19 @@
 using RacingDigital.Services.Interfaces;
 using System.Data.SqlClient;
 using Dapper;
+using System.Data;
 
 
 namespace RacingDigital.Services
 {
     public class RacesService : IRacesService
     {
-        //public void AddCustomer(Race customer)
-        //{
-        //    var maxId = CustomerData.CustomerList.Max(x => x.Id);
-        //    customer.Id = maxId + 1;
-        //    CustomerData.CustomerList.Add(customer);
-        //}
+        private const string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\ruth_\\source\\repos\\RacingDigital\\RacingDigital.Services\\RacingDigitalDatabase.mdf;Integrated Security=True";
+
 
         public IEnumerable<RaceResult> GetRaces()
         {
-     
-            string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\ruth_\\source\\repos\\RacingDigital\\RacingDigital.Services\\RacingDigitalDatabase.mdf;Integrated Security=True";
-
-            // Replace with your actual SQL query
-         
+       
             using var connection = new SqlConnection(connectionString);
             connection.Open();
             var races = connection.Query<RaceResult>("SELECT * FROM dbo.Races");
@@ -31,14 +24,20 @@ namespace RacingDigital.Services
            
         }
 
-        //public void UpdateCustomer(Race customer)
-        //{
-        //    var originalCustomer = CustomerData.CustomerList.FirstOrDefault(x => x.Id == customer.Id);
-        //    if (originalCustomer != null)
-        //    {
-        //        var indexOf = CustomerData.CustomerList.IndexOf(CustomerData.CustomerList.Find(p => p.Id == customer.Id));
-        //        CustomerData.CustomerList[indexOf] = customer;
-        //    }
-        //}
+        public IEnumerable<Notes> GetNotes(int raceId) {
+
+            using var connection = new SqlConnection(connectionString);
+            connection.Open();
+            return connection.Query<Notes>($"SELECT * FROM dbo.Notes WHERE raceId = {raceId}");
+          }
+
+        public int AddNotes(Notes item)
+        {
+            var sql = "INSERT INTO Notes (RaceID, NoteText) VALUES (@RaceID, @NoteText)";
+            using var connection = new SqlConnection(connectionString);
+            connection.Open();
+            return connection.Execute(sql, new { item.RaceId, item.NoteText }, commandType: CommandType.Text);
+       }
+
     }
 }
