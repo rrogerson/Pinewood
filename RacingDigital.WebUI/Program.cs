@@ -1,4 +1,6 @@
+using Microsoft.Extensions.Options;
 using RacingDigital.WebUI.Components;
+using RacingDigital.WebUI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +8,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.Configure<ApiSettings>(
+          builder.Configuration.GetSection("ApiSettings"));
+
+builder.Services.AddSingleton(resolver =>
+    resolver.GetRequiredService<IOptions<ApiSettings>>().Value);
+
+// Register HttpClient
+builder.Services.AddHttpClient();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
